@@ -183,41 +183,76 @@ describe("GET/api/reviews", () => {
         ]);
       });
   });
-  describe("GET/api", () => {
-    test("200: get a list of categories", async () => {
-      return request(app)
-        .get("/api/categories")
-        .expect(200)
-        .then((res) => {
-          const categories = res.body;
-          expect(categories).toEqual([
-            {
-              slug: "euro game",
-              description: "Abstact games that involve little luck",
-            },
-            {
-              slug: "social deduction",
-              description:
-                "Players attempt to uncover each other's hidden role",
-            },
-            {
-              slug: "dexterity",
-              description: "Games involving physical skill",
-            },
-            {
-              slug: "children's games",
-              description: "Games suitable for children",
-            },
-          ]);
+});
+
+describe("GET/api/reviews/:review_id", () => {
+  test("expect to respond with a review", () => {
+    request(app)
+      .get("/api/reviews/4")
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          review_id: 4,
+          title: "Dolor reprehenderit",
+          review_body:
+            "Consequat velit occaecat voluptate do. Dolor pariatur fugiat sint et proident ex do consequat est. Nisi minim laboris mollit cupidatat et adipisicing laborum do. Sint sit tempor officia pariatur duis ullamco labore ipsum nisi voluptate nulla eu veniam. Et do ad id dolore id cillum non non culpa. Cillum mollit dolor dolore excepteur aliquip. Cillum aliquip quis aute enim anim ex laborum officia. Aliqua magna elit reprehenderit Lorem elit non laboris irure qui aliquip ad proident. Qui enim mollit Lorem labore eiusmod",
+          designer: "Gamey McGameface",
+          review_img_url:
+            "https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?w=700&h=700",
+          votes: 7,
+          category: "social deduction",
+          owner: "mallionaire",
+          created_at: "2021-01-22T11:35:50.936Z",
         });
-    });
-    test("404: expect an 404 response code when endpoint not found", () => {
-      return request(app)
-        .get("/api/review")
-        .expect(404)
-        .then(({ text }) => {
-          expect(text).toBe("Not Found");
-        });
-    });
+      });
+  });
+
+  test("expect to respond with a review", () => {
+    request(app)
+      .get("/api/reviews/4000")
+      .expect(404)
+      .then((res) => {
+        expect(res.body).toEqual({ message: "No such review" });
+      });
+  });
+});
+
+describe("GET/api", () => {
+  test("200: get a list of categories", async () => {
+    return request(app)
+      .get("/api/categories")
+      .expect(200)
+      .then((res) => {
+        const categories = res.body;
+        expect(categories).toEqual([
+          {
+            slug: "euro game",
+            description: "Abstact games that involve little luck",
+          },
+          {
+            slug: "social deduction",
+            description: "Players attempt to uncover each other's hidden role",
+          },
+          {
+            slug: "dexterity",
+            description: "Games involving physical skill",
+          },
+          {
+            slug: "children's games",
+            description: "Games suitable for children",
+          },
+        ]);
+      });
+  });
+});
+
+describe("404 error handler", () => {
+  test("404: expect an 404 response code when endpoint not found", () => {
+    return request(app)
+      .get("/api/review")
+      .expect(404)
+      .then(({ text }) => {
+        expect(text).toBe("Not Found");
+      });
   });
 });
