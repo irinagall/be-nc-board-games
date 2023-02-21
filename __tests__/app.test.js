@@ -8,12 +8,10 @@ const seed = require("../db/seeds/seed.js");
 
 const data = require("../db/data/test-data/index");
 
-// closes the connection
 afterAll(() => {
   db.end();
 });
 
-// seed the datatabase to reset the data before each test
 beforeEach(() => {
   return seed(data);
 });
@@ -25,7 +23,6 @@ describe("GET/api/reviews", () => {
       .expect(200)
       .then((res) => {
         const reviewListings = res.body;
-        // console.log(reviewListings);
         expect(reviewListings).toEqual([
           {
             owner: "mallionaire",
@@ -184,6 +181,14 @@ describe("GET/api/reviews", () => {
             comment_count: "0",
           },
         ]);
+      });
+  });
+  test("404: expect an 404 response code when endpoint not found", () => {
+    return request(app)
+      .get("/api/review")
+      .expect(404)
+      .then(({ text }) => {
+        expect(text).toBe("Not Found");
       });
   });
 });

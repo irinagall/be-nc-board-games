@@ -4,9 +4,13 @@ const {
 } = require("../models/models");
 
 function fetchAllCategories(req, res, next) {
-  selectAllCategories().then((categories) => {
-    res.status(200).send(categories);
-  });
+  selectAllCategories()
+    .then((categories) => {
+      res.status(200).send(categories);
+    })
+    .catch((error) => {
+      next(error);
+    });
 }
 
 function fetchAllReviews(req, res, next) {
