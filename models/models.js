@@ -20,7 +20,13 @@ function selectAllReviewsWithCommentCounts() {
   `
     )
     .then(({ rows }) => {
+      rows.forEach(
+        (review) => (review.comment_count = review.comment_count - 0)
+      );
       return rows;
+    })
+    .then((convertedRows) => {
+      return convertedRows;
     });
 }
 

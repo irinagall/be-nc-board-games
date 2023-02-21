@@ -34,7 +34,7 @@ describe("GET/api/reviews", () => {
             created_at: "2021-01-25T11:16:54.963Z",
             votes: 9,
             designer: "Avery Wunzboogerz",
-            comment_count: "0",
+            comment_count: 0,
           },
           {
             owner: "mallionaire",
@@ -46,7 +46,7 @@ describe("GET/api/reviews", () => {
             created_at: "2021-01-22T11:35:50.936Z",
             votes: 7,
             designer: "Gamey McGameface",
-            comment_count: "0",
+            comment_count: 0,
           },
           {
             owner: "mallionaire",
@@ -58,7 +58,7 @@ describe("GET/api/reviews", () => {
             created_at: "2021-01-22T10:37:04.839Z",
             votes: 100,
             designer: "Jamey Stegmaier",
-            comment_count: "0",
+            comment_count: 0,
           },
           {
             owner: "mallionaire",
@@ -70,7 +70,7 @@ describe("GET/api/reviews", () => {
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 10,
             designer: "Asger Harding Granerud",
-            comment_count: "0",
+            comment_count: 0,
           },
           {
             owner: "bainesface",
@@ -82,7 +82,7 @@ describe("GET/api/reviews", () => {
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 5,
             designer: "Akihisa Okui",
-            comment_count: "3",
+            comment_count: 3,
           },
           {
             owner: "philippaclaire9",
@@ -94,7 +94,7 @@ describe("GET/api/reviews", () => {
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 5,
             designer: "Leslie Scott",
-            comment_count: "3",
+            comment_count: 3,
           },
           {
             owner: "mallionaire",
@@ -106,7 +106,7 @@ describe("GET/api/reviews", () => {
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 10,
             designer: "Wolfgang Warsch",
-            comment_count: "0",
+            comment_count: 0,
           },
           {
             owner: "mallionaire",
@@ -118,7 +118,7 @@ describe("GET/api/reviews", () => {
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 8,
             designer: "Fiona Lohoar",
-            comment_count: "0",
+            comment_count: 0,
           },
           {
             owner: "mallionaire",
@@ -130,7 +130,7 @@ describe("GET/api/reviews", () => {
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 5,
             designer: "Akihisa Okui",
-            comment_count: "0",
+            comment_count: 0,
           },
           {
             owner: "mallionaire",
@@ -142,7 +142,7 @@ describe("GET/api/reviews", () => {
             created_at: "2021-01-18T10:00:20.514Z",
             votes: 1,
             designer: "Uwe Rosenberg",
-            comment_count: "0",
+            comment_count: 0,
           },
           {
             owner: "mallionaire",
@@ -154,7 +154,7 @@ describe("GET/api/reviews", () => {
             created_at: "2021-01-07T09:06:08.077Z",
             votes: 5,
             designer: "Seymour Buttz",
-            comment_count: "0",
+            comment_count: 0,
           },
           {
             owner: "mallionaire",
@@ -166,7 +166,7 @@ describe("GET/api/reviews", () => {
             created_at: "2020-09-13T14:19:28.077Z",
             votes: 8,
             designer: "Ollie Tabooger",
-            comment_count: "0",
+            comment_count: 0,
           },
           {
             owner: "mallionaire",
@@ -178,7 +178,7 @@ describe("GET/api/reviews", () => {
             created_at: "1970-01-10T02:08:38.400Z",
             votes: 16,
             designer: "Klaus Teuber",
-            comment_count: "0",
+            comment_count: 0,
           },
         ]);
       });
@@ -190,7 +190,6 @@ describe("GET/api/reviews", () => {
         .expect(200)
         .then((res) => {
           const categories = res.body;
-          //console.log(res.body);
           expect(categories).toEqual([
             {
               slug: "euro game",
