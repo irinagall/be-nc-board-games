@@ -22,4 +22,5 @@ function fetchAllReviews(req, res, next) {
 function error500(error, req, res, next) {
   res.status(500).send({ message: "Sorry, server error!" });
 }
+
 module.exports = { fetchAllCategories, fetchAllReviews, error500 };

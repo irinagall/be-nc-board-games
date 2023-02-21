@@ -24,4 +24,10 @@ function selectAllReviewsWithCommentCounts() {
     });
 }
 
-module.exports = { selectAllReviewsWithCommentCounts };
+function selectAllCategories() {
+  return db.query("SELECT * FROM categories;").then(({ rows }) => {
+    return rows;
+  });
+}
+
+module.exports = { selectAllCategories, selectAllReviewsWithCommentCounts };
