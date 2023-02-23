@@ -217,6 +217,9 @@ describe("GET/api/reviews/:review_id", () => {
         expect(res.body).toEqual({ message: "No such review" });
       });
   });
+  test("400:expect to respond with an error for an invalid request", () => {
+    return request(app).get("/api/reviews/nonsense/").expect(400);
+  });
 });
 
 describe("GET/api/reviews/:review_id/comments", () => {
@@ -262,10 +265,14 @@ describe("GET/api/reviews/:review_id/comments", () => {
         expect(body.comments).toEqual([]);
       });
   });
+
+  test("400:expect to respond with an error for an invalid request", () => {
+    return request(app).get("/api/reviews/nonsense/comments").expect(400);
+  });
 });
 
-describe("GET/api", () => {
-  test("200: get a list of categories", async () => {
+describe("GET/api/categories", () => {
+  test("expect to respond with a status code 200 and a list of categories", async () => {
     return request(app)
       .get("/api/categories")
       .expect(200)

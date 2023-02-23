@@ -16,9 +16,13 @@ function fetchAllCategories(req, res, next) {
 }
 
 function fetchAllReviews(req, res, next) {
-  selectAllReviewsWithCommentCounts().then((reviewsWithCommentCounts) => {
-    res.status(200).send(reviewsWithCommentCounts);
-  });
+  selectAllReviewsWithCommentCounts()
+    .then((reviewsWithCommentCounts) => {
+      res.status(200).send(reviewsWithCommentCounts);
+    })
+    .catch((error) => {
+      next(error);
+    });
 }
 
 function fetchReviewById(req, res, next) {
@@ -36,7 +40,12 @@ function fetchReviewById(req, res, next) {
 }
 
 function fetchAllCommentsByReviewId(req, res, next) {
-  selectAllCommentsByReviewId(req.params.review_id)
+  const reviewId = req.params.review_id;
+  if (isNaN(reviewId)) {
+    res.status(400).send();
+    return;
+  }
+  selectAllCommentsByReviewId(reviewId)
     .then((comments) => {
       res.status(200).send({ comments: comments });
     })
