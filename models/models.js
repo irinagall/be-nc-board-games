@@ -42,11 +42,22 @@ function selectReviewById(reviewId) {
       category,
       owner,
       created_at
-      FROM reviews WHERE review_id = $1`,
+      FROM reviews WHERE review_id = $1;`,
       [reviewId]
     )
     .then(({ rows }) => {
       return rows[0];
+    });
+}
+
+function selectAllCommentsByReviewId(reviewId) {
+  return db
+    .query(
+      `SELECT comment_id, votes,created_at,author,body,review_id FROM comments WHERE review_id = $1 ORDER BY created_at;`,
+      [reviewId]
+    )
+    .then(({ rows }) => {
+      return rows;
     });
 }
 
@@ -60,4 +71,5 @@ module.exports = {
   selectAllCategories,
   selectAllReviewsWithCommentCounts,
   selectReviewById,
+  selectAllCommentsByReviewId,
 };

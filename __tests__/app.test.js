@@ -8,12 +8,12 @@ const seed = require("../db/seeds/seed.js");
 
 const data = require("../db/data/test-data/index");
 
-afterAll(() => {
-  db.end();
-});
-
 beforeEach(() => {
   return seed(data);
+});
+
+afterAll(() => {
+  return db.end();
 });
 
 describe("GET/api/reviews", () => {
@@ -187,38 +187,92 @@ describe("GET/api/reviews", () => {
 
 describe("GET/api/reviews/:review_id", () => {
   test("expect to respond with a review", () => {
-    request(app)
+    return request(app)
       .get("/api/reviews/4")
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
-          review_id: 4,
-          title: "Dolor reprehenderit",
-          review_body:
-            "Consequat velit occaecat voluptate do. Dolor pariatur fugiat sint et proident ex do consequat est. Nisi minim laboris mollit cupidatat et adipisicing laborum do. Sint sit tempor officia pariatur duis ullamco labore ipsum nisi voluptate nulla eu veniam. Et do ad id dolore id cillum non non culpa. Cillum mollit dolor dolore excepteur aliquip. Cillum aliquip quis aute enim anim ex laborum officia. Aliqua magna elit reprehenderit Lorem elit non laboris irure qui aliquip ad proident. Qui enim mollit Lorem labore eiusmod",
-          designer: "Gamey McGameface",
-          review_img_url:
-            "https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?w=700&h=700",
-          votes: 7,
-          category: "social deduction",
-          owner: "mallionaire",
-          created_at: "2021-01-22T11:35:50.936Z",
+          review: {
+            review_id: 4,
+            title: "Dolor reprehenderit",
+            review_body:
+              "Consequat velit occaecat voluptate do. Dolor pariatur fugiat sint et proident ex do consequat est. Nisi minim laboris mollit cupidatat et adipisicing laborum do. Sint sit tempor officia pariatur duis ullamco labore ipsum nisi voluptate nulla eu veniam. Et do ad id dolore id cillum non non culpa. Cillum mollit dolor dolore excepteur aliquip. Cillum aliquip quis aute enim anim ex laborum officia. Aliqua magna elit reprehenderit Lorem elit non laboris irure qui aliquip ad proident. Qui enim mollit Lorem labore eiusmod",
+            designer: "Gamey McGameface",
+            review_img_url:
+              "https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?w=700&h=700",
+            votes: 7,
+            category: "social deduction",
+            owner: "mallionaire",
+            created_at: "2021-01-22T11:35:50.936Z",
+          },
         });
       });
   });
 
-  test("expect to respond with a review", () => {
-    request(app)
+  test("expect to respond with a message when review id is valid but it does not exist", () => {
+    return request(app)
       .get("/api/reviews/4000")
       .expect(404)
       .then((res) => {
         expect(res.body).toEqual({ message: "No such review" });
       });
   });
+  test("400:expect to respond with an error for an invalid request", () => {
+    return request(app).get("/api/reviews/nonsense/").expect(400);
+  });
 });
 
-describe("GET/api", () => {
-  test("200: get a list of categories", async () => {
+describe("GET/api/reviews/:review_id/comments", () => {
+  test("expect to respond with an array of comments for the given review_id", () => {
+    return request(app)
+      .get("/api/reviews/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toEqual([
+          {
+            comment_id: 4,
+            votes: 16,
+            created_at: "2017-11-22T12:36:03.389Z",
+            review_id: 2,
+            author: "bainesface",
+            body: "EPIC board game!",
+          },
+          {
+            comment_id: 1,
+            votes: 16,
+            created_at: "2017-11-22T12:43:33.389Z",
+            review_id: 2,
+            author: "bainesface",
+            body: "I loved this game too!",
+          },
+          {
+            comment_id: 5,
+            votes: 13,
+            created_at: "2021-01-18T10:24:05.410Z",
+            review_id: 2,
+            author: "mallionaire",
+            body: "Now this is a story all about how, board games turned my life upside down",
+          },
+        ]);
+      });
+  });
+
+  test("expect to respond with an empty list for a valid but nonexistent review_id", () => {
+    return request(app)
+      .get("/api/reviews/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments).toEqual([]);
+      });
+  });
+
+  test("400:expect to respond with an error for an invalid request", () => {
+    return request(app).get("/api/reviews/nonsense/comments").expect(400);
+  });
+});
+
+describe("GET/api/categories", () => {
+  test("expect to respond with a status code 200 and a list of categories", async () => {
     return request(app)
       .get("/api/categories")
       .expect(200)
@@ -249,7 +303,7 @@ describe("GET/api", () => {
 describe("404 error handler", () => {
   test("404: expect an 404 response code when endpoint not found", () => {
     return request(app)
-      .get("/api/review")
+      .get("/api/notfound")
       .expect(404)
       .then(({ text }) => {
         expect(text).toBe("Not Found");
