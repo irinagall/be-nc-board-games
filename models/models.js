@@ -30,10 +30,34 @@ function selectAllReviewsWithCommentCounts() {
     });
 }
 
+function selectReviewById(reviewId) {
+  return db
+    .query(
+      `SELECT review_id,
+      title,
+      review_body,
+      designer,
+      review_img_url,
+      votes,
+      category,
+      owner,
+      created_at
+      FROM reviews WHERE review_id = $1`,
+      [reviewId]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+}
+
 function selectAllCategories() {
   return db.query("SELECT * FROM categories;").then(({ rows }) => {
     return rows;
   });
 }
 
-module.exports = { selectAllCategories, selectAllReviewsWithCommentCounts };
+module.exports = {
+  selectAllCategories,
+  selectAllReviewsWithCommentCounts,
+  selectReviewById,
+};
