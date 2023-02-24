@@ -1,5 +1,11 @@
 const db = require("../db/connection");
 
+function selectAllCategories() {
+  return db.query("SELECT * FROM categories;").then(({ rows }) => {
+    return rows;
+  });
+}
+
 function selectAllReviewsWithCommentCounts() {
   return db
     .query(
@@ -61,10 +67,16 @@ function selectAllCommentsByReviewId(reviewId) {
     });
 }
 
-function selectAllCategories() {
-  return db.query("SELECT * FROM categories;").then(({ rows }) => {
-    return rows;
-  });
+function addNewComment(review_id, username, body) {
+  return db
+    .query(
+      `INSERT INTO comments (body, review_id, author) VALUES ($1, $2, $3) RETURNING *`,
+      [body, review_id, username]
+    )
+    .then(({ rows }) => {
+      //console.log(rows[0]);
+      return rows[0];
+    });
 }
 
 module.exports = {
@@ -72,4 +84,5 @@ module.exports = {
   selectAllReviewsWithCommentCounts,
   selectReviewById,
   selectAllCommentsByReviewId,
+  addNewComment,
 };

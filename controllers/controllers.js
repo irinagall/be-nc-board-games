@@ -3,6 +3,7 @@ const {
   selectAllReviewsWithCommentCounts,
   selectReviewById,
   selectAllCommentsByReviewId,
+  addNewComment,
 } = require("../models/models");
 
 function fetchAllCategories(req, res, next) {
@@ -54,9 +55,28 @@ function fetchAllCommentsByReviewId(req, res, next) {
     });
 }
 
+function insertNewCommentByReviewId(req, res, next) {
+  const { review_id } = req.params;
+  const { username } = req.body;
+  const { body } = req.body;
+  if (body === "") {
+    res.status(400).send();
+    return;
+  }
+  addNewComment(review_id, username, body)
+    .then((comment) => {
+      //console.log(comment);
+      res.status(201).send({ comment });
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
 module.exports = {
   fetchAllCategories,
   fetchAllReviews,
   fetchReviewById,
   fetchAllCommentsByReviewId,
+  insertNewCommentByReviewId,
 };

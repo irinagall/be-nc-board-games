@@ -16,6 +16,35 @@ afterAll(() => {
   return db.end();
 });
 
+describe("GET/api/categories", () => {
+  test("expect to respond with a status code 200 and a list of categories", async () => {
+    return request(app)
+      .get("/api/categories")
+      .expect(200)
+      .then((res) => {
+        const categories = res.body;
+        expect(categories).toEqual([
+          {
+            slug: "euro game",
+            description: "Abstact games that involve little luck",
+          },
+          {
+            slug: "social deduction",
+            description: "Players attempt to uncover each other's hidden role",
+          },
+          {
+            slug: "dexterity",
+            description: "Games involving physical skill",
+          },
+          {
+            slug: "children's games",
+            description: "Games suitable for children",
+          },
+        ]);
+      });
+  });
+});
+
 describe("GET/api/reviews", () => {
   test("expect to respond with a status code of 200 and an array of review listings", () => {
     return request(app)
@@ -271,31 +300,85 @@ describe("GET/api/reviews/:review_id/comments", () => {
   });
 });
 
-describe("GET/api/categories", () => {
-  test("expect to respond with a status code 200 and a list of categories", async () => {
+describe("POST /api/reviews/:review_id/comments", () => {
+  test("expect to respond with a new comment", () => {
+    const newComment = {
+      username: "bainesface",
+      body: "My cat loved this game too",
+    };
     return request(app)
-      .get("/api/categories")
-      .expect(200)
+      .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual({
+          author: "bainesface",
+          body: "My cat loved this game too",
+          votes: 0,
+          comment_id: 7,
+          review_id: 1,
+          created_at: expect.any(String),
+        });
+      });
+  });
+
+  test("expect to post the comment even when the object takes an unecessary extra key", () => {
+    const newComment = {
+      username: "bainesface",
+      body: "My cat loved this game too",
+      nonesense: "this-comment-should-still-post",
+    };
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.comment).toEqual({
+          author: "bainesface",
+          body: "My cat loved this game too",
+          votes: 0,
+          comment_id: 7,
+          review_id: 1,
+          created_at: expect.any(String),
+        });
+      });
+  });
+
+  test("400:expect to respond with an error when trying to post an empty comment", () => {
+    const newComment = {
+      username: "bainesface",
+    };
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(400);
+  });
+
+  test("404: expect to respond with a message when review id is valid but it does not exist", () => {
+    const newComment = {
+      username: "happytoofo",
+      body: "My cat loved this game too",
+    };
+    return request(app)
+      .post("/api/reviews/4000/comments")
+      .send(newComment)
+      .expect(404)
       .then((res) => {
-        const categories = res.body;
-        expect(categories).toEqual([
-          {
-            slug: "euro game",
-            description: "Abstact games that involve little luck",
-          },
-          {
-            slug: "social deduction",
-            description: "Players attempt to uncover each other's hidden role",
-          },
-          {
-            slug: "dexterity",
-            description: "Games involving physical skill",
-          },
-          {
-            slug: "children's games",
-            description: "Games suitable for children",
-          },
-        ]);
+        expect(res.body).toEqual({ message: "Not found" });
+      });
+  });
+
+  test("404: expect to respond with an error when username is valid but it does not exist", () => {
+    const newComment = {
+      username: "happytoofo",
+      body: "My cat loved this game too",
+    };
+    return request(app)
+      .post("/api/reviews/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then((res) => {
+        expect(res.body).toEqual({ message: "Not found" });
       });
   });
 });
