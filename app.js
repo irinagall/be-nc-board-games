@@ -1,16 +1,20 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
 
 const {
   fetchAllCategories,
   fetchAllReviews,
   fetchReviewById,
   fetchAllCommentsByReviewId,
+  insertNewCommentByReviewId,
 } = require("./controllers/controllers");
 
 const {
   customErrorHandler,
 } = require("./controllers/errorHandlingControllers");
+
+app.get("/api/categories", fetchAllCategories);
 
 app.get("/api/reviews", fetchAllReviews);
 
@@ -18,7 +22,7 @@ app.get("/api/reviews/:review_id/comments", fetchAllCommentsByReviewId);
 
 app.get("/api/reviews/:review_id", fetchReviewById);
 
-app.get("/api/categories", fetchAllCategories);
+app.post("/api/reviews/:review_id/comments", insertNewCommentByReviewId);
 
 app.use(customErrorHandler);
 
