@@ -100,6 +100,40 @@ function selectAllUsers() {
     });
 }
 
+function getFilteredReviews(category, orderByColumn, sortOrder) {
+  const isCategoryValid = typeof category === "string";
+  const defaultOrderByColumn = "created_at";
+  const defaultOrder = "DESC";
+  const actualOrder = sortOrder.toUpperCase() === "ASC" ? "ASC" : defaultOrder;
+  const validColumns = [
+    "review_id",
+    "title",
+    "category",
+    "designer",
+    "owner",
+    "review_body",
+    "review_img_url",
+    "created_at",
+    "votes",
+  ];
+  const isOrderByColumnValid = validColumns.includes(
+    orderByColumn.toLowerCase()
+  );
+  const actualOrderByColumn = isOrderByColumnValid
+    ? orderByColumn
+    : defaultOrderByColumn;
+  const queryPart1 = `SELECT * FROM reviews`;
+  const queryPart2 = isCategoryValid ? `WHERE category = $3` : "";
+  const queryPart3 = `ORDER BY $2 $1`;
+  const query = `${queryPart1} ${queryPart2} ${queryPart3}`;
+  return db
+    .query(query, [actualOrder, actualOrderByColumn, category])
+    .then(({ rows }) => {
+      const filteredReviews = rows;
+      return filteredReviews;
+    });
+}
+
 module.exports = {
   selectAllCategories,
   selectAllReviewsWithCommentCounts,
@@ -108,4 +142,5 @@ module.exports = {
   addNewComment,
   updateVotesCount,
   selectAllUsers,
+  getFilteredReviews,
 };
