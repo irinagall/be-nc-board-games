@@ -8,6 +8,7 @@ const {
   fetchReviewById,
   fetchAllCommentsByReviewId,
   insertNewCommentByReviewId,
+  patchVotesCount,
 } = require("./controllers/controllers");
 
 const {
@@ -23,6 +24,8 @@ app.get("/api/reviews/:review_id/comments", fetchAllCommentsByReviewId);
 app.get("/api/reviews/:review_id", fetchReviewById);
 
 app.post("/api/reviews/:review_id/comments", insertNewCommentByReviewId);
+
+app.patch("/api/reviews/:review_id", patchVotesCount);
 
 app.use(customErrorHandler);
 

@@ -383,6 +383,79 @@ describe("POST /api/reviews/:review_id/comments", () => {
   });
 });
 
+describe("PATCH /api/reviews/:review_id", () => {
+  test("given a review id and votes count object should update the votes and respond with the updated review", () => {
+    const newVotesCount = { inc_votes: 2 };
+    return request(app)
+      .patch("/api/reviews/3")
+      .send(newVotesCount)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          review: {
+            title: "Ultimate Werewolf",
+            review_id: 3,
+            designer: "Akihisa Okui",
+            owner: "bainesface",
+            review_img_url:
+              "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?w=700&h=700",
+            review_body: "We couldn't find the werewolf!",
+            category: "social deduction",
+            created_at: expect.any(String),
+            votes: 7,
+          },
+        });
+      });
+  });
+
+  test("given a review id and a negative votes count object should update the votes and respond with the updated review", () => {
+    const newVotesCount = { inc_votes: -2 };
+    return request(app)
+      .patch("/api/reviews/3")
+      .send(newVotesCount)
+      .expect(200)
+      .then((res) => {
+        expect(res.body).toEqual({
+          review: {
+            title: "Ultimate Werewolf",
+            review_id: 3,
+            designer: "Akihisa Okui",
+            owner: "bainesface",
+            review_img_url:
+              "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?w=700&h=700",
+            review_body: "We couldn't find the werewolf!",
+            category: "social deduction",
+            created_at: expect.any(String),
+            votes: 3,
+          },
+        });
+      });
+  });
+
+  test("404:given a review id and a negative votes count object should update the votes and respond with the updated review", () => {
+    const newVotesCount = { inc_votes: -2 };
+    return request(app)
+      .patch("/api/reviews/99")
+      .send(newVotesCount)
+      .expect(404)
+      .then((res) => {
+        expect(res.body).toEqual({});
+      });
+  });
+
+  test("400:given an empty request body it should respond with a 400 status code", () => {
+    return request(app).patch("/api/reviews/4").send({}).expect(400);
+  });
+
+  test("400:given a non integer review id expect 400 status code", () => {
+    const newVotesCount = { inc_votes: -2 };
+    return request(app)
+      .patch("/api/reviews/four")
+      .send(newVotesCount)
+      .expect(400);
+  });
+});
+
 describe("404 error handler", () => {
   test("404: expect an 404 response code when endpoint not found", () => {
     return request(app)
