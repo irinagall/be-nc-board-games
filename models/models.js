@@ -79,10 +79,23 @@ function addNewComment(review_id, username, body) {
     });
 }
 
+function updateVotesCount(reviewId, newVotesCount) {
+  return db
+    .query(
+      `UPDATE reviews SET votes = votes + $2 WHERE review_id = $1 RETURNING *;`,
+      [reviewId, newVotesCount]
+    )
+    .then(({ rows }) => {
+      const updatedReview = rows[0];
+      return updatedReview;
+    });
+}
+
 module.exports = {
   selectAllCategories,
   selectAllReviewsWithCommentCounts,
   selectReviewById,
   selectAllCommentsByReviewId,
   addNewComment,
+  updateVotesCount,
 };

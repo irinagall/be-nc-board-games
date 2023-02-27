@@ -4,6 +4,7 @@ const {
   selectReviewById,
   selectAllCommentsByReviewId,
   addNewComment,
+  updateVotesCount,
 } = require("../models/models");
 
 function fetchAllCategories(req, res, next) {
@@ -58,12 +59,12 @@ function fetchAllCommentsByReviewId(req, res, next) {
 function insertNewCommentByReviewId(req, res, next) {
   const { review_id } = req.params;
   const { username } = req.body;
-  const { body } = req.body;
-  if (body === "") {
+  const commentText = req.body.body;
+  if (commentText === "") {
     res.status(400).send();
     return;
   }
-  addNewComment(review_id, username, body)
+  addNewComment(review_id, username, commentText)
     .then((comment) => {
       //console.log(comment);
       res.status(201).send({ comment });
@@ -73,10 +74,30 @@ function insertNewCommentByReviewId(req, res, next) {
     });
 }
 
+function patchVotesCount(req, res, next) {
+  const { review_id } = req.params;
+  const { inc_votes } = req.body;
+
+  if (isNaN(inc_votes - 0) || isNaN(parseInt(review_id, 10))) {
+    res.status(400).send();
+    return;
+  }
+
+  updateVotesCount(review_id, inc_votes).then((updatedReview) => {
+    if (!updatedReview) {
+      res.status(404).send();
+      return;
+    }
+    const patchResponseBody = { review: updatedReview };
+    res.status(200).send(patchResponseBody);
+  });
+}
+
 module.exports = {
   fetchAllCategories,
   fetchAllReviews,
   fetchReviewById,
   fetchAllCommentsByReviewId,
   insertNewCommentByReviewId,
+  patchVotesCount,
 };
