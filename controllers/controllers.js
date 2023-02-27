@@ -5,6 +5,7 @@ const {
   selectAllCommentsByReviewId,
   addNewComment,
   updateVotesCount,
+  selectAllUsers,
 } = require("../models/models");
 
 function fetchAllCategories(req, res, next) {
@@ -93,6 +94,16 @@ function patchVotesCount(req, res, next) {
   });
 }
 
+function fetchAllUsers(req, res, next) {
+  selectAllUsers()
+    .then((allUsers) => {
+      res.status(200).send({ users: allUsers });
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
 module.exports = {
   fetchAllCategories,
   fetchAllReviews,
@@ -100,4 +111,5 @@ module.exports = {
   fetchAllCommentsByReviewId,
   insertNewCommentByReviewId,
   patchVotesCount,
+  fetchAllUsers,
 };

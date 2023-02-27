@@ -63,7 +63,8 @@ function selectAllCommentsByReviewId(reviewId) {
       [reviewId]
     )
     .then(({ rows }) => {
-      return rows;
+      const comments = rows;
+      return comments;
     });
 }
 
@@ -74,7 +75,6 @@ function addNewComment(review_id, username, body) {
       [body, review_id, username]
     )
     .then(({ rows }) => {
-      //console.log(rows[0]);
       return rows[0];
     });
 }
@@ -91,6 +91,15 @@ function updateVotesCount(reviewId, newVotesCount) {
     });
 }
 
+function selectAllUsers() {
+  return db
+    .query("SELECT username, name, avatar_url FROM users ORDER BY name ASC;")
+    .then(({ rows }) => {
+      const allUsers = rows;
+      return allUsers;
+    });
+}
+
 module.exports = {
   selectAllCategories,
   selectAllReviewsWithCommentCounts,
@@ -98,4 +107,5 @@ module.exports = {
   selectAllCommentsByReviewId,
   addNewComment,
   updateVotesCount,
+  selectAllUsers,
 };
