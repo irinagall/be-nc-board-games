@@ -119,6 +119,7 @@ function getFilteredReviews(category, orderByColumn, sortOrder) {
   const isOrderByColumnValid = validColumns.includes(
     orderByColumn.toLowerCase()
   );
+
   const actualOrderByColumn = isOrderByColumnValid
     ? orderByColumn
     : defaultOrderByColumn;
