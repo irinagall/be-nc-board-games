@@ -39,20 +39,30 @@ function selectAllReviewsWithCommentCounts() {
 function selectReviewById(reviewId) {
   return db
     .query(
-      `SELECT review_id,
-      title,
-      review_body,
-      designer,
-      review_img_url,
-      votes,
-      category,
-      owner,
-      created_at
-      FROM reviews WHERE review_id = $1;`,
+      `SELECT 
+      reviews.owner, 
+      reviews.title, 
+      reviews.review_body,
+      reviews.review_id, 
+      reviews.category, 
+      reviews.review_img_url, 
+      reviews.created_at, 
+      reviews.votes, 
+      reviews.designer, 
+      (select COUNT(*) from comments where review_id=$1) AS comment_count 
+      FROM reviews 
+      WHERE reviews.review_id = $1
+  `,
       [reviewId]
     )
     .then(({ rows }) => {
-      return rows[0];
+      rows.forEach(
+        (review) => (review.comment_count = review.comment_count - 0)
+      );
+      return rows;
+    })
+    .then((convertedRows) => {
+      return convertedRows[0];
     });
 }
 
