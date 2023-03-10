@@ -4,6 +4,7 @@ const {
   selectReviewById,
   selectAllCommentsByReviewId,
   addNewComment,
+  deleteComment,
   updateVotesCount,
   selectAllUsers,
   getFilteredReviews,
@@ -97,6 +98,17 @@ function insertNewCommentByReviewId(req, res, next) {
     });
 }
 
+function deleteCommentById(req, res, next) {
+  const { comment_id } = req.params;
+  deleteComment(comment_id)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
 function patchVotesCount(req, res, next) {
   const { review_id } = req.params;
   const { inc_votes } = req.body;
@@ -134,4 +146,5 @@ module.exports = {
   insertNewCommentByReviewId,
   patchVotesCount,
   fetchAllUsers,
+  deleteCommentById,
 };

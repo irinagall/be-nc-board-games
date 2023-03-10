@@ -89,6 +89,14 @@ function addNewComment(review_id, username, body) {
     });
 }
 
+function deleteComment(commentId) {
+  return db.query(
+    `DELETE from comments where comment_id =$1
+  `,
+    [commentId]
+  );
+}
+
 function updateVotesCount(reviewId, newVotesCount) {
   return db
     .query(
@@ -149,6 +157,7 @@ module.exports = {
   selectReviewById,
   selectAllCommentsByReviewId,
   addNewComment,
+  deleteComment,
   updateVotesCount,
   selectAllUsers,
   getFilteredReviews,
