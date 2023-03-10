@@ -217,22 +217,22 @@ describe("GET/api/reviews", () => {
 describe("GET/api/reviews/:review_id", () => {
   test("expect to respond with a review", () => {
     return request(app)
-      .get("/api/reviews/4")
+      .get("/api/reviews/3")
       .expect(200)
       .then((res) => {
         expect(res.body).toEqual({
           review: {
-            review_id: 4,
-            title: "Dolor reprehenderit",
-            review_body:
-              "Consequat velit occaecat voluptate do. Dolor pariatur fugiat sint et proident ex do consequat est. Nisi minim laboris mollit cupidatat et adipisicing laborum do. Sint sit tempor officia pariatur duis ullamco labore ipsum nisi voluptate nulla eu veniam. Et do ad id dolore id cillum non non culpa. Cillum mollit dolor dolore excepteur aliquip. Cillum aliquip quis aute enim anim ex laborum officia. Aliqua magna elit reprehenderit Lorem elit non laboris irure qui aliquip ad proident. Qui enim mollit Lorem labore eiusmod",
-            designer: "Gamey McGameface",
-            review_img_url:
-              "https://images.pexels.com/photos/278918/pexels-photo-278918.jpeg?w=700&h=700",
-            votes: 7,
+            owner: "bainesface",
+            title: "Ultimate Werewolf",
+            review_body: "We couldn't find the werewolf!",
+            review_id: 3,
             category: "social deduction",
-            owner: "mallionaire",
-            created_at: "2021-01-22T11:35:50.936Z",
+            review_img_url:
+              "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?w=700&h=700",
+            created_at: "2021-01-18T10:01:41.251Z",
+            votes: 5,
+            designer: "Akihisa Okui",
+            comment_count: 3,
           },
         });
       });
@@ -494,7 +494,7 @@ describe("GET /api/users", () => {
   });
 });
 
-describe.only("GET /api/reviews(queries)", () => {
+describe("GET /api/reviews(queries)", () => {
   test("expect all reviews by category by default sorting", () => {
     return request(app)
       .get("/api/reviews?category=social%20deduction")
