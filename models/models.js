@@ -123,16 +123,14 @@ function getFilteredReviews(category, orderByColumn, sortOrder) {
   const actualOrderByColumn = isOrderByColumnValid
     ? orderByColumn
     : defaultOrderByColumn;
-  const queryPart1 = `SELECT * FROM reviews`;
-  const queryPart2 = isCategoryValid ? `WHERE category = $3` : "";
-  const queryPart3 = `ORDER BY $2 $1`;
-  const query = `${queryPart1} ${queryPart2} ${queryPart3}`;
-  return db
-    .query(query, [actualOrder, actualOrderByColumn, category])
-    .then(({ rows }) => {
-      const filteredReviews = rows;
-      return filteredReviews;
-    });
+  let whereCondition = isCategoryValid ? "WHERE category = $1" : "";
+  const query = `SELECT * FROM reviews ${whereCondition} ORDER BY ${actualOrderByColumn} ${actualOrder}`;
+
+  const restOfQuery = isCategoryValid ? [category] : [];
+  return db.query(query, restOfQuery).then(({ rows }) => {
+    const filteredReviews = rows;
+    return filteredReviews;
+  });
 }
 
 module.exports = {
