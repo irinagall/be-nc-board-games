@@ -6,6 +6,7 @@ const {
   addNewComment,
   updateVotesCount,
   selectAllUsers,
+  getFilteredReviews,
 } = require("../models/models");
 
 function fetchAllCategories(req, res, next) {
@@ -26,6 +27,28 @@ function fetchAllReviews(req, res, next) {
     .catch((error) => {
       next(error);
     });
+}
+
+function queryReviews(req, res, next) {
+  const category = req.query.category;
+  const sortBy = req.query.sort_by || "";
+  const order = req.query.order || "";
+
+  getFilteredReviews(category, sortBy, order)
+    .then((reviews) => {
+      res.status(200).send(reviews);
+    })
+    .catch((error) => {
+      next(error);
+    });
+}
+
+function reviewsEndpoint(req, res, next) {
+  if (Object.keys(req.query).length) {
+    queryReviews(req, res, next);
+    return;
+  }
+  fetchAllReviews(req, res, next);
 }
 
 function fetchReviewById(req, res, next) {
@@ -67,7 +90,6 @@ function insertNewCommentByReviewId(req, res, next) {
   }
   addNewComment(review_id, username, commentText)
     .then((comment) => {
-      //console.log(comment);
       res.status(201).send({ comment });
     })
     .catch((error) => {
@@ -106,8 +128,8 @@ function fetchAllUsers(req, res, next) {
 
 module.exports = {
   fetchAllCategories,
-  fetchAllReviews,
   fetchReviewById,
+  reviewsEndpoint,
   fetchAllCommentsByReviewId,
   insertNewCommentByReviewId,
   patchVotesCount,

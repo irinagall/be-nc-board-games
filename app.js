@@ -4,7 +4,7 @@ app.use(express.json());
 
 const {
   fetchAllCategories,
-  fetchAllReviews,
+  reviewsEndpoint,
   fetchReviewById,
   fetchAllCommentsByReviewId,
   insertNewCommentByReviewId,
@@ -18,7 +18,7 @@ const {
 
 app.get("/api/categories", fetchAllCategories);
 
-app.get("/api/reviews", fetchAllReviews);
+app.get("/api/reviews", reviewsEndpoint);
 
 app.get("/api/reviews/:review_id/comments", fetchAllCommentsByReviewId);
 
