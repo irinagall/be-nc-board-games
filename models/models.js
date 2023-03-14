@@ -18,7 +18,8 @@ function selectAllReviewsWithCommentCounts() {
   reviews.created_at, 
   reviews.votes, 
   reviews.designer, 
-  COUNT(comment_id) AS comment_count 
+  COUNT(comment_id) AS comment_count,
+  reviews.review_body 
   FROM reviews 
   LEFT JOIN comments ON comments.review_id=reviews.review_id 
   GROUP BY reviews.review_id
