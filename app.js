@@ -1,7 +1,7 @@
 const cors = require("cors");
-app.use(cors());
 const express = require("express");
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const {
@@ -10,6 +10,7 @@ const {
   fetchReviewById,
   fetchAllCommentsByReviewId,
   insertNewCommentByReviewId,
+  deleteCommentById,
   patchVotesCount,
   fetchAllUsers,
 } = require("./controllers/controllers");
@@ -31,6 +32,8 @@ app.post("/api/reviews/:review_id/comments", insertNewCommentByReviewId);
 app.patch("/api/reviews/:review_id", patchVotesCount);
 
 app.get("/api/users", fetchAllUsers);
+
+app.delete("api/comments/:comment_id", deleteCommentById);
 
 app.use(customErrorHandler);
 
