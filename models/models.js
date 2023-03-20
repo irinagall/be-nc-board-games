@@ -143,7 +143,17 @@ function getFilteredReviews(category, orderByColumn, sortOrder) {
     ? orderByColumn
     : defaultOrderByColumn;
   let whereCondition = isCategoryValid ? "WHERE category = $1" : "";
-  const query = `SELECT * FROM reviews ${whereCondition} ORDER BY ${actualOrderByColumn} ${actualOrder}`;
+  const query = `SELECT
+  reviews.owner, 
+  reviews.title, 
+  reviews.review_id, 
+  reviews.category, 
+  reviews.review_img_url, 
+  reviews.created_at, 
+  reviews.votes, 
+  reviews.designer, 
+  (SELECT COUNT(*) FROM comments WHERE comments.review_id=reviews.review_id) AS comment_count,
+  reviews.review_body FROM reviews ${whereCondition} ORDER BY ${actualOrderByColumn} ${actualOrder}`;
 
   const restOfQuery = isCategoryValid ? [category] : [];
   return db.query(query, restOfQuery).then(({ rows }) => {
