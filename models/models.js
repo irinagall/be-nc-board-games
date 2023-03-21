@@ -134,7 +134,7 @@ function getFilteredReviews(category, orderByColumn, sortOrder) {
     "review_img_url",
     "created_at",
     "votes",
-    "coment_count",
+    "comment_count",
   ];
   const isOrderByColumnValid = validColumns.includes(
     orderByColumn.toLowerCase()
